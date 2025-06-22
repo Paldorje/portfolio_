@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Developer Portfolio</title>
+    <meta name="description" content="Full-stack developer specializing in modern web technologies">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.3s ease;
+            mix-blend-mode: difference;
+        }
+        
+        .custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            background-color: #3b82f6;
+            opacity: 0.3;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .typing-animation::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .dark .project-card:hover {
+            box-shadow: 0 20px 40px rgba(255,255,255,0.1);
+        }
+        
+        .skill-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .skill-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transform-origin: left;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        // Custom Hook for Theme
+        const useTheme = () => {
+            const [isDark, setIsDark] = useState(() => {
+                const saved = localStorage.getItem('theme');
+                return saved ? JSON.parse(saved) : false;
+            });
+            
+            useEffect(() => {
+                localStorage.setItem('theme', JSON.stringify(isDark));
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [isDark]);
+            
+            return [isDark, setIsDark];
+        };
+        
+        // Custom Hook for Typing Animation
+        const useTypingAnimation = (texts, speed = 100) => {
+            const [displayText, setDisplayText] = useState('');
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [currentCharIndex, setCurrentCharIndex] = useState(0);
+            const [isDeleting, setIsDeleting] = useState(false);
+            
+            useEffect(() => {
+                const timeout = setTimeout(() => {
+                    const currentText = texts[currentIndex];
+                    
+                    if (!isDeleting) {
+                        if (currentCharIndex < currentText.length) {
+                            setDisplayText(currentText.substring(0, currentCharIndex + 1));
+                            setCurrentCharIndex(prev => prev + 1);
+                        } else {
+                            setTimeout(() => setIsDeleting(true), 2000);
+                        }
+                    } else {
+                        if (currentCharIndex > 0) {
+                            setDisplayText(currentText.substring(0, currentCharIndex - 1));
+                            setCurrentCharIndex(prev => prev - 1);
+                        } else {
+                            setIsDeleting(false);
+                            setCurrentIndex((prev) => (prev + 1) % texts.length);
+                        }
+                    }
+                }, isDeleting ? speed / 2 : speed);
+                
+                return () => clearTimeout(timeout);
+            }, [currentCharIndex, currentIndex, isDeleting, texts, speed]);
+            
+            return displayText;
+        };
+        
+        // Custom Cursor Component
+        const CustomCursor = () => {
+            const cursorRef = useRef(null);
+            
+            useEffect(() => {
+                const cursor = cursorRef.current;
+                
+                const moveCursor = (e) => {
+                    cursor.style.left = e.clientX - 10 + 'px';
+                    cursor.style.top = e.clientY - 10 + 'px';
+                };
+                
+                const addHoverEffect = () => cursor.classList.add('hover');
+                const removeHoverEffect = () => cursor.classList.remove('hover');
+                
+                document.addEventListener('mousemove', moveCursor);
+                
+                const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-icon');
+                hoverElements.forEach(el => {
+                    el.addEventListener('mouseenter', addHoverEffect);
+                    el.addEventListener('mouseleave', removeHoverEffect);
+                });
+                
+                return () => {
+                    document.removeEventListener('mousemove', moveCursor);
+                    hoverElements.forEach(el => {
+                        el.removeEventListener('mouseenter', addHoverEffect);
+                        el.removeEventListener('mouseleave', removeHoverEffect);
+                    });
+                };
+            }, []);
+            
+            return <div ref={cursorRef} className="custom-cursor hidden md:block"></div>;
+        };
+        
+        // Scroll Progress Component
+        const ScrollProgress = () => {
+            const [scrollProgress, setScrollProgress] = useState(0);
+            
+            useEffect(() => {
+                const updateScrollProgress = () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = (scrollTop / docHeight) * 100;
+                    setScrollProgress(progress);
+                };
+                
+                window.addEventListener('scroll', updateScrollProgress);
+                return () => window.removeEventListener('scroll', updateScrollProgress);
+            }, []);
+            
+            return (
+                <div 
+                    className="scroll-indicator"
+                    style={{ transform: `scaleX(${scrollProgress / 100})` }}
+                ></div>
+            );
+        };
+        
+        // Navigation Component
+        const Navigation = ({ isDark, setIsDark }) => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            
+            const scrollToSection = (sectionId) => {
+                const element = document.getElementById(sectionId);
+                element?.scrollIntoView({ behavior: 'smooth' });
+                setIsMenuOpen(false);
+            };
+            
+            return (
+                <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-16">
+                            <div className="font-bold text-xl text-gray-900 dark:text-white">
+                                Portfolio
+                            </div>
+                            
+                            {/* Desktop Menu */}
+                            <div className="hidden md:flex items-center space-x-8">
+                                {['home', 'about', 'projects', 'skills', 'contact'].map(item => (
+                                    <button
+                                        key={item}
+                                        onClick={() => scrollToSection(item)}
+                                        className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors capitalize"
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                                <button
+                                    onClick={() => setIsDark(!isDark)}
+                                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    {isDark ? <i className="fas fa-sun text-yellow-500"></i> : <i className="fas fa-moon text-gray-600"></i>}
+                                </button>
+                            </div>
+                            
+                            {/* Mobile Menu Button */}
+                            <div className="md:hidden flex items-center space-x-2">
+                                <button
+                                    onClick={() => setIsDark(!isDark)}
+                                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+                                >
+                                    {isDark ? <i className="fas fa-sun text-yellow-500"></i> : <i className="fas fa-moon text-gray-600"></i>}
+                                </button>
+                                <button
+                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+                                >
+                                    <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-gray-600 dark:text-gray-300`}></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Mobile Menu */}
+                        {isMenuOpen && (
+                            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+                                {['home', 'about', 'projects', 'skills', 'contact'].map(item => (
+                                    <button
+                                        key={item}
+                                        onClick={() => scrollToSection(item)}
+                                        className="block w-full text-left py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors capitalize"
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </nav>
+            );
+        };
+        
+        // Hero Section
+        const HeroSection = () => {
+            const typedText = useTypingAnimation([
+                'Full-Stack Developer',
+                'React Specialist',
+                'UI/UX Enthusiast',
+                'Problem Solver'
+            ]);
+            
+            useEffect(() => {
+                gsap.registerPlugin(ScrollTrigger);
+                
+                const tl = gsap.timeline();
+                tl.from('.hero-content', { duration: 1, y: 100, opacity: 0, ease: 'power3.out' })
+                  .from('.hero-subtitle', { duration: 0.8, y: 50, opacity: 0, ease: 'power3.out' }, '-=0.5')
+                  .from('.hero-cta', { duration: 0.8, y: 30, opacity: 0, ease: 'power3.out' }, '-=0.3');
+            }, []);
+            
+            return (
+                <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+                    {/* Floating Shapes */}
+                    <div className="floating-shape w-64 h-64 bg-blue-400 -top-32 -left-32" style={{animationDelay: '0s'}}></div>
+                    <div className="floating-shape w-48 h-48 bg-purple-400 -bottom-24 -right-24" style={{animationDelay: '2s'}}></div>
+                    <div className="floating-shape w-32 h-32 bg-pink-400 top-1/4 right-1/4" style={{animationDelay: '4s'}}></div>
+                    
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+                        <div className="hero-content">
+                            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
+                                Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Your Name</span>
+                            </h1>
+                            <p className="hero-subtitle text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-8 typing-animation">
+                                {typedText}
+                            </p>
+                            <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-12 max-w-3xl mx-auto">
+                                I craft beautiful, functional, and user-centered digital experiences that solve real-world problems.
+                            </p>
+                            <div className="hero-cta flex flex-col sm:flex-row gap-4 justify-center">
+                                <button 
+                                    onClick={() => document.getElementById('projects').scrollIntoView({ behavior: 'smooth' })}
+                                    className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                                >
+                                    View My Work
+                                </button>
+                                <button 
+                                    onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+                                    className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-all duration-300"
+                                >
+                                    Get In Touch
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // About Section
+        const AboutSection = () => {
+            const sectionRef = useRef(null);
+            
+            useEffect(() => {
+                const section = sectionRef.current;
+                
+                gsap.fromTo(section.querySelectorAll('.about-item'), 
+                    { y: 100, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        stagger: 0.2,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 80%',
+                            end: 'bottom 20%',
+                        }
+                    }
+                );
+            }, []);
+            
+            return (
+                <section id="about" ref={sectionRef} className="py-20 bg-white dark:bg-gray-900">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16 about-item">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                                About Me
+                            </h2>
+                            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto"></div>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div className="about-item">
+                                <div className="w-full h-96 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl shadow-2xl relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20"></div>
+                                    <div className="absolute bottom-6 left-6 right-6">
+                                        <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+                                            <p className="text-white font-semibold">Always Learning, Always Growing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="about-item space-y-6">
+                                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                                    I'm a passionate full-stack developer with over 3 years of experience creating 
+                                    digital solutions that matter. My journey started with curiosity about how websites work, 
+                                    and it has evolved into a deep love for crafting seamless user experiences.
+                                </p>
+                                
+                                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                                    When I'm not coding, you'll find me exploring new technologies, contributing to open-source 
+                                    projects, or sharing knowledge with the developer community. I believe in writing clean, 
+                                    maintainable code and creating applications that users love to interact with.
+                                </p>
+                                
+                                <div className="grid grid-cols-2 gap-6 pt-6">
+                                    <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                                        <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">50+</div>
+                                        <div className="text-gray-600 dark:text-gray-400">Projects Completed</div>
+                                    </div>
+                                    <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                                        <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">3+</div>
+                                        <div className="text-gray-600 dark:text-gray-400">Years Experience</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Projects Section
+        const ProjectsSection = () => {
+            const sectionRef = useRef(null);
+            
+            const projects = [
+                {
+                    title: "E-Commerce Platform",
+                    description: "A full-stack e-commerce solution with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard.",
+                    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop",
+                    tech: ["React", "Node.js", "MongoDB", "Stripe"],
+                    github: "#",
+                    demo: "#"
+                },
+                {
+                    title: "Task Management App",
+                    description: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.",
+                    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop",
+                    tech: ["React", "Firebase", "Tailwind CSS", "Framer Motion"],
+                    github: "#",
+                    demo: "#"
+                },
+                {
+                    title: "Weather Dashboard",
+                    description: "A beautiful weather application with location-based forecasts, interactive maps, and detailed weather analytics.",
+                    image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=600&h=400&fit=crop",
+                    tech: ["React", "OpenWeather API", "Chart.js", "Geolocation"],
+                    github: "#",
+                    demo: "#"
+                },
+                {
+                    title: "Portfolio Website",
+                    description: "This very portfolio website you're viewing, built with modern web technologies and smooth animations.",
+                    image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=600&h=400&fit=crop",
+                    tech: ["React", "Tailwind CSS", "GSAP", "Responsive Design"],
+                    github: "#",
+                    demo: "#"
+                }
+            ];
+            
+            useEffect(() => {
+                const section = sectionRef.current;
+                
+                gsap.fromTo(section.querySelectorAll('.project-card'), 
+                    { y: 100, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        stagger: 0.2,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 80%',
+                        }
+                    }
+                );
+            }, []);
+            
+            return (
+                <section id="projects" ref={sectionRef} className="py-20 bg-gray-50 dark:bg-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                                Featured Projects
+                            </h2>
+                            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto"></div>
+                            <p className="text-lg text-gray-600 dark:text-gray-300 mt-6 max-w-3xl mx-auto">
+                                Here are some of my recent projects that showcase my skills and passion for creating amazing digital experiences.
+                            </p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+                            {projects.map((project, index) => (
+                                <div key={index} className="project-card bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl">
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img 
+                                            src={project.image} 
+                                            alt={project.title}
+                                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                                            loading="lazy"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    </div>
+                                    
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                                            {project.title}
+                                        </h3>
+                                        <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                                            {project.description}
+                                        </p>
+                                        
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {project.tech.map((tech, techIndex) => (
+                                                <span 
+                                                    key={techIndex}
+                                                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-sm rounded-full"
+                                                >
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        
+                                        <div className="flex gap-4">
+                                            <a 
+                                                href={project.github}
+                                                className="flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
+                                            >
+                                                <i className="fab fa-github"></i>
+                                                Code
+                                            </a>
+                                            <a 
+                                                href={project.demo}
+                                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                            >
+                                                <i className="fas fa-external-link-alt"></i>
+                                                Demo
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Skills Section
+        const SkillsSection = () => {
+            const sectionRef = useRef(null);
+            
+            const skills = [
+                { name: 'React', icon: 'fab fa-react', color: 'text-blue-500' },
+                { name: 'JavaScript', icon: 'fab fa-js-square', color: 'text-yellow-500' },
+                { name: 'TypeScript', icon: 'fas fa-code', color: 'text-blue-600' },
+                { name: 'Node.js', icon: 'fab fa-node-js', color: 'text-green-500' },
+                { name: 'Python', icon: 'fab fa-python', color: 'text-blue-400' },
+                { name: 'MongoDB', icon: 'fas fa-database', color: 'text-green-600' },
+                { name: 'PostgreSQL', icon: 'fas fa-database', color: 'text-blue-700' },
+                { name: 'AWS', icon: 'fab fa-aws', color: 'text-orange-500' },
+                { name: 'Docker', icon: 'fab fa-docker', color: 'text-blue-500' },
+                { name: 'Git', icon: 'fab fa-git-alt', color: 'text-red-500' },
+                { name: 'Figma', icon: 'fab fa-figma', color: 'text-purple-500' },
+                { name: 'Tailwind CSS', icon: 'fas fa-palette', color: 'text-teal-500' }
+            ];
+            
+            useEffect(() => {
+                const section = sectionRef.current;
+                
+                gsap.fromTo(section.querySelectorAll('.skill-icon'), 
+                    { scale: 0, rotation: -180 },
+                    {
+                        scale: 1,
+                        rotation: 0,
+                        duration: 0.8,
+                        stagger: 0.1,
+                        ease: 'back.out(1.7)',
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 80%',
+                        }
+                    }
+                );
+            }, []);
+            
+            return (
+                <section id="skills" ref={sectionRef} className="py-20 bg-white dark:bg-gray-900">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                                Skills & Technologies
+                            </h2>
+                            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto"></div>
+                            <p className="text-lg text-gray-600 dark:text-gray-300 mt-6 max-w-3xl mx-auto">
+                                I work with modern technologies to create scalable and efficient solutions.
+                            </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
+                            {skills.map((skill, index) => (
+                                <div 
+                                    key={index}
+                                    className="skill-icon flex flex-col items-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 cursor-pointer"
+                                >
+                                    <i className={`${skill.icon} text-4xl mb-3 ${skill.color}`}></i>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">
+                                        {skill.name}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Contact Section
+        const ContactSection = () => {
+            const [formData, setFormData] = useState({
+                name: '',
+                email: '',
+                message: ''
+            });
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [submitStatus, setSubmitStatus] = useState('');
+            
+            const sectionRef = useRef(null);
+            
+            useEffect(() => {
+                const section = sectionRef.current;
+                
+                gsap.fromTo(section.querySelectorAll('.contact-item'), 
+                    { y: 100, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        stagger: 0.2,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 80%',
+                        }
+                    }
+                );
+            }, []);
+            
+            const handleInputChange = (e) => {
+                setFormData({
+                    ...formData,
+                    [e.target.name]: e.target.value
+                });
+            };
+            
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                
+                // Simulate form submission
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    setSubmitStatus('success');
+                    setFormData({ name: '', email: '', message: '' });
+                } catch (error) {
+                    setSubmitStatus('error');
+                } finally {
+                    setIsSubmitting(false);
+                    setTimeout(() => setSubmitStatus(''), 5000);
+                }
+            };
+            
+            return (
+                <section id="contact" ref={sectionRef} className="py-20 bg-gray-50 dark:bg-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16 contact-item">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                                Get In Touch
+                            </h2>
+                            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto"></div>
+                            <p className="text-lg text-gray-600 dark:text-gray-300 mt-6 max-w-3xl mx-auto">
+                                I'm always open to discussing new opportunities and interesting projects. Let's create something amazing together!
+                            </p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 gap-12">
+                            <div className="contact-item">
+                                <div className="space-y-8">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                            <i className="fas fa-envelope text-blue-600 dark:text-blue-400"></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Email</h3>
+                                            <p className="text-gray-600 dark:text-gray-300">your.email@example.com</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-4">
+                                        <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                                            <i className="fas fa-phone text-green-600 dark:text-green-400"></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Phone</h3>
+                                            <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4567</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-4">
+                                        <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                                            <i className="fas fa-map-marker-alt text-purple-600 dark:text-purple-400"></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Location</h3>
+                                            <p className="text-gray-600 dark:text-gray-300">San Francisco, CA</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="contact-item">
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div>
+                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors"
+                                            placeholder="Your Name"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors"
+                                            placeholder="your.email@example.com"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Message
+                                        </label>
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleInputChange}
+                                            rows={5}
+                                            required
+                                            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors resize-none"
+                                            placeholder="Tell me about your project..."
+                                        ></textarea>
+                                    </div>
+                                    
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                    >
+                                        {isSubmitting ? (
+                                            <span className="flex items-center justify-center">
+                                                <i className="fas fa-spinner fa-spin mr-2"></i>
+                                                Sending...
+                                            </span>
+                                        ) : (
+                                            'Send Message'
+                                        )}
+                                    </button>
+                                    
+                                    {submitStatus === 'success' && (
+                                        <div className="p-4 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 rounded-lg">
+                                            <p className="text-green-700 dark:text-green-300 flex items-center">
+                                                <i className="fas fa-check-circle mr-2"></i>
+                                                Message sent successfully! I'll get back to you soon.
+                                            </p>
+                                        </div>
+                                    )}
+                                    
+                                    {submitStatus === 'error' && (
+                                        <div className="p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-600 rounded-lg">
+                                            <p className="text-red-700 dark:text-red-300 flex items-center">
+                                                <i className="fas fa-exclamation-circle mr-2"></i>
+                                                Something went wrong. Please try again.
+                                            </p>
+                                        </div>
+                                    )}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Footer Component
+        const Footer = () => {
+            const socialLinks = [
+                { name: 'GitHub', icon: 'fab fa-github', url: 'https://github.com/yourusername' },
+                { name: 'LinkedIn', icon: 'fab fa-linkedin', url: 'https://linkedin.com/in/yourusername' },
+                { name: 'Twitter', icon: 'fab fa-twitter', url: 'https://twitter.com/yourusername' },
+                { name: 'Email', icon: 'fas fa-envelope', url: 'mailto:your.email@example.com' }
+            ];
+            
+            return (
+                <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <div className="flex flex-col md:flex-row justify-between items-center">
+                            <div className="mb-6 md:mb-0">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                    Let's Connect
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300">
+                                    Building the future, one line of code at a time.
+                                </p>
+                            </div>
+                            
+                            <div className="flex space-x-6">
+                                {socialLinks.map((link, index) => (
+                                    <a
+                                        key={index}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors group"
+                                        title={link.name}
+                                    >
+                                        <i className={`${link.icon} text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors`}></i>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                        
+                        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
+                            <p className="text-gray-500 dark:text-gray-400">
+                                © 2025 Your Name. Built with React & Tailwind CSS. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+        
+        // Main App Component
+        const App = () => {
+            const [isDark, setIsDark] = useTheme();
+            
+            useEffect(() => {
+                // Initialize GSAP
+                gsap.registerPlugin(ScrollTrigger);
+                
+                // Smooth scrolling for anchor links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+                
+                // Add loading animation
+                const tl = gsap.timeline();
+                tl.to('.loading-screen', { duration: 0.5, opacity: 0, delay: 1 })
+                  .set('.loading-screen', { display: 'none' });
+                
+            }, []);
+            
+            return (
+                <div className={`min-h-screen ${isDark ? 'dark' : ''}`}>
+                    {/* Loading Screen */}
+                    <div className="loading-screen fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                            <p className="text-gray-600 dark:text-gray-300 text-lg">Loading...</p>
+                        </div>
+                    </div>
+                    
+                    <CustomCursor />
+                    <ScrollProgress />
+                    <Navigation isDark={isDark} setIsDark={setIsDark} />
+                    
+                    <main>
+                        <HeroSection />
+                        <AboutSection />
+                        <ProjectsSection />
+                        <SkillsSection />
+                        <ContactSection />
+                    </main>
+                    
+                    <Footer />
+                </div>
+            );
+        };
+        
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

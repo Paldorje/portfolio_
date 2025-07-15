@@ -262,7 +262,7 @@
         const [isDark, setIsDark] = useState(() => {
             // Check for saved theme preference or default to false
             const saved = localStorage.getItem('darkMode');
-            return saved ? JSON.parse(saved) : true;
+            return saved ? JSON.parse(saved) : false;
         });
 
         useEffect(() => {

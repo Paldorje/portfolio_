@@ -3,36 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tshering Wangchu Sherpa — Portfolio</title>
-  <meta name="description" content="Tshering Wangchu Sherpa — Flutter Developer, Computing Graduate, and mobile app builder." />
-  <meta name="keywords" content="Flutter Developer, Portfolio, Computing Graduate, Mobile App Developer, UI UX, Database, Nepal" />
-  <meta name="theme-color" content="#0b1020" />
-  <link rel="canonical" href="https://example.com/" />
-  <meta property="og:title" content="Tshering Wangchu Sherpa — Portfolio" />
-  <meta property="og:description" content="Modern portfolio showcasing Flutter, database, and full-stack projects." />
+  <title>Tshering Wangchu Sherpa — Developer Portfolio</title>
+  <meta name="description" content="Flutter Developer & Computing Graduate portfolio showcasing mobile apps, database systems, and modern software projects." />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="author" content="Tshering Wangchu Sherpa" />
+  <meta name="keywords" content="Flutter Developer, Computing Graduate, Portfolio, Mobile App Development, Database, Nepal" />
+  <meta property="og:title" content="Tshering Wangchu Sherpa — Developer Portfolio" />
+  <meta property="og:description" content="A modern, high-contrast portfolio for a Flutter Developer and Computing Graduate." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="./profile.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Tshering Wangchu Sherpa — Portfolio" />
-  <meta name="twitter:description" content="Modern portfolio showcasing Flutter, database, and full-stack projects." />
+  <meta name="twitter:title" content="Tshering Wangchu Sherpa — Developer Portfolio" />
+  <meta name="twitter:description" content="A modern, high-contrast portfolio for a Flutter Developer and Computing Graduate." />
   <meta name="twitter:image" content="./profile.png" />
   <style>
     :root {
-      --bg: #070b14;
-      --bg-2: #0b1120;
-      --card: rgba(255,255,255,.06);
-      --card-strong: rgba(255,255,255,.1);
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --panel: rgba(255,255,255,.06);
+      --panel-strong: rgba(255,255,255,.1);
       --stroke: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.95);
-      --muted: rgba(255,255,255,.68);
-      --muted-2: rgba(255,255,255,.5);
-      --accent: #6ea8ff;
-      --accent-2: #8f6bff;
-      --good: #4ade80;
-      --shadow: 0 28px 80px rgba(0,0,0,.42);
+      --text: rgba(255,255,255,.96);
+      --muted: rgba(255,255,255,.7);
+      --muted-2: rgba(255,255,255,.52);
+      --accent: #62a8ff;
+      --accent-2: #7c5cff;
+      --good: #49d17d;
+      --shadow: 0 28px 90px rgba(0,0,0,.42);
       --radius-xl: 32px;
       --radius-lg: 24px;
       --radius-md: 18px;
+      --radius-sm: 14px;
       --container: min(1200px, calc(100vw - 32px));
       --ease: cubic-bezier(.2,.8,.2,1);
     }
@@ -43,9 +44,9 @@
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 20% 10%, rgba(110,168,255,.18), transparent 30%),
-        radial-gradient(circle at 80% 20%, rgba(143,107,255,.14), transparent 26%),
-        linear-gradient(180deg, var(--bg), var(--bg-2));
+        radial-gradient(circle at 20% 10%, rgba(98,168,255,.16), transparent 28%),
+        radial-gradient(circle at 80% 18%, rgba(124,92,255,.14), transparent 24%),
+        linear-gradient(180deg, var(--bg), var(--bg-soft));
       color: var(--text);
       line-height: 1.7;
       overflow-x: hidden;
@@ -55,7 +56,7 @@
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
-    button { font: inherit; }
+    button, input, textarea { font: inherit; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
     .skip-link {
@@ -71,21 +72,32 @@
     .skip-link:focus { left: 12px; }
 
     .container { width: var(--container); margin: 0 auto; }
-    .section { padding: clamp(86px, 10vw, 136px) 0; position: relative; }
+    .section { padding: clamp(84px, 10vw, 136px) 0; position: relative; }
 
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(26px);
       transition: opacity .85s var(--ease), transform .85s var(--ease);
     }
     .reveal.show { opacity: 1; transform: translateY(0); }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      z-index: 1200;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transform-origin: left;
+      transform: scaleX(0);
+    }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 1000;
       backdrop-filter: blur(18px);
-      background: linear-gradient(to bottom, rgba(7,11,20,.88), rgba(7,11,20,.55));
+      background: linear-gradient(to bottom, rgba(7,17,31,.9), rgba(7,17,31,.55));
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .nav {
@@ -103,7 +115,7 @@
       align-items: center;
       gap: 12px;
       font-weight: 700;
-      letter-spacing: .16em;
+      letter-spacing: .14em;
       text-transform: uppercase;
       font-size: .8rem;
       white-space: nowrap;
@@ -111,7 +123,7 @@
     .brand-mark {
       width: 34px; height: 34px; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 14px 30px rgba(110,168,255,.26);
+      box-shadow: 0 14px 30px rgba(98,168,255,.22);
     }
     .nav-links {
       display: flex;
@@ -161,25 +173,24 @@
       height: 34vw;
       border-radius: 50%;
       pointer-events: none;
-      filter: blur(20px);
-      opacity: .75;
+      filter: blur(22px);
+      opacity: .8;
       animation: drift 12s var(--ease) infinite alternate;
     }
     .hero::before {
       top: -8%; left: -12%;
-      background: radial-gradient(circle, rgba(110,168,255,.25), transparent 60%);
+      background: radial-gradient(circle, rgba(98,168,255,.22), transparent 60%);
     }
     .hero::after {
-      right: -12%; bottom: -8%;
-      background: radial-gradient(circle, rgba(143,107,255,.18), transparent 60%);
-      animation-duration: 15s;
+      right: -12%; bottom: -10%;
+      background: radial-gradient(circle, rgba(124,92,255,.16), transparent 60%);
+      animation-duration: 16s;
     }
-
     .hero-grid {
       width: var(--container);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1.08fr .92fr;
       gap: clamp(28px, 5vw, 72px);
       align-items: center;
       position: relative;
@@ -203,11 +214,10 @@
     }
     .hero h1 {
       margin: 0;
-      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
-      font-size: clamp(3.5rem, 8vw, 6.5rem);
+      font-size: clamp(3.5rem, 8vw, 6.6rem);
       line-height: .94;
       letter-spacing: -.06em;
-      max-width: 12ch;
+      max-width: 11ch;
     }
     .hero p {
       color: var(--muted);
@@ -239,9 +249,8 @@
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: #101321;
       border-color: transparent;
-      box-shadow: 0 20px 40px rgba(110,168,255,.2);
+      box-shadow: 0 20px 40px rgba(98,168,255,.18);
     }
-    .btn.secondary { background: rgba(255,255,255,.05); }
 
     .hero-card {
       position: relative;
@@ -255,7 +264,6 @@
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
       border: 1px solid rgba(255,255,255,.12);
       box-shadow: var(--shadow);
-      transform: translateZ(0);
     }
     .hero-frame img {
       width: 100%;
@@ -264,19 +272,6 @@
       transition: transform .9s var(--ease);
     }
     .hero-card:hover img { transform: scale(1.04); }
-    .floating-badge {
-      position: absolute;
-      left: -18px;
-      bottom: 24px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,.12);
-      color: var(--muted);
-      box-shadow: 0 18px 40px rgba(0,0,0,.24);
-      animation: float 7s var(--ease) infinite alternate;
-    }
     .hero-mini {
       position: absolute;
       top: 28px;
@@ -291,7 +286,19 @@
       animation: float 8s var(--ease) infinite alternate-reverse;
     }
     .hero-mini img { width: 100%; height: 100%; object-fit: cover; }
-
+    .floating-badge {
+      position: absolute;
+      left: -18px;
+      bottom: 24px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      box-shadow: 0 18px 40px rgba(0,0,0,.24);
+      animation: float 7s var(--ease) infinite alternate;
+    }
     .scroll-hint {
       position: absolute;
       left: 50%;
@@ -319,11 +326,10 @@
     }
     .section-head h2 {
       margin: 0;
-      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
       font-size: clamp(2.35rem, 4.8vw, 4.7rem);
       line-height: .98;
       letter-spacing: -.05em;
-      max-width: 13ch;
+      max-width: 12ch;
     }
     .section-head p {
       margin: 0;
@@ -359,7 +365,7 @@
       color: var(--text) !important;
       font-size: clamp(1.4rem, 2.2vw, 2rem) !important;
       line-height: 1.25 !important;
-      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      font-weight: 600;
     }
     .stats {
       display: grid;
@@ -502,7 +508,7 @@
     }
     .skill-chip:hover {
       transform: translateY(-4px);
-      border-color: rgba(110,168,255,.35);
+      border-color: rgba(98,168,255,.35);
       background: rgba(255,255,255,.07);
     }
     .skill-chip span { color: var(--muted); font-weight: 600; }
@@ -516,8 +522,7 @@
     .contact-card { padding: clamp(26px, 3.5vw, 42px); }
     .contact-card h2 {
       margin: 0 0 12px;
-      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-size: clamp(2.5rem, 5vw, 4.4rem);
       line-height: .98;
       letter-spacing: -.05em;
     }
@@ -538,9 +543,7 @@
     .social-pill span:first-child { color: var(--muted); }
     .social-pill span:last-child { color: var(--text); }
 
-    .footer {
-      padding: 18px 0 34px;
-    }
+    .footer { padding: 18px 0 34px; }
     .footer-box {
       width: var(--container);
       margin: 0 auto;
@@ -563,17 +566,6 @@
       transition: transform .25s ease, border-color .25s ease;
     }
     .to-top:hover { transform: translateY(-2px); border-color: var(--accent); }
-
-    .progress {
-      position: fixed;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 4px;
-      z-index: 1200;
-      transform-origin: left;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      transform: scaleX(0);
-    }
 
     @keyframes float {
       from { transform: translate3d(0, 0, 0); }
@@ -610,7 +602,7 @@
         gap: 16px;
         padding: 18px;
         border-radius: 24px;
-        background: rgba(7,11,20,.94);
+        background: rgba(7,17,31,.96);
         border: 1px solid rgba(255,255,255,.12);
         box-shadow: var(--shadow);
         opacity: 0;
@@ -622,7 +614,6 @@
       .hero h1 { max-width: 10ch; }
       .hero-mini { display: none; }
       .floating-badge { left: 14px; bottom: 14px; }
-      .section-head h2 { max-width: 11ch; }
       .project-card { grid-column: span 12; }
       .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .footer-box { flex-direction: column; align-items: flex-start; }
@@ -644,9 +635,6 @@
         <div id="primary-nav" class="nav-links">
           <a href="#about">About</a>
           <a href="#projects">Projects</a>
-          <a href="#travel">Travel</a>
-          <a href="#editorial">Editorial</a>
-          <a href="#digital">Digital</a>
           <a href="#skills">Skills</a>
           <a href="#contact">Contact</a>
         </div>
@@ -661,11 +649,11 @@
           <p class="eyebrow">Flutter Developer · Computing Graduate</p>
           <h1>Modern interfaces, built with precision and calm confidence.</h1>
           <p>
-            I design and develop clean mobile experiences, database-driven systems, and polished digital products that balance usability, performance, and visual clarity.
+            I build clean mobile applications and practical software systems with a strong focus on usability, performance, and visual clarity.
           </p>
           <div class="hero-actions">
             <a class="btn primary" href="#projects">View Projects</a>
-            <a class="btn secondary" href="#contact">Contact Me</a>
+            <a class="btn" href="#contact">Get In Touch</a>
           </div>
         </div>
 
@@ -687,10 +675,10 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">About</p>
-            <h2>Thoughtful design with strong contrast and clear hierarchy.</h2>
+            <h2>A clean, high-contrast portfolio that feels more premium.</h2>
           </div>
           <p>
-            I like work that feels organized, polished, and easy to use. My focus is on building digital experiences that look premium while staying practical for real users.
+            I like work that feels organized, readable, and confident. My focus is on turning technical skills into clear, modern digital experiences.
           </p>
         </div>
 
@@ -699,12 +687,12 @@
             <img src="./profile.png" alt="Portrait of Tshering Wangchu Sherpa" loading="lazy" />
           </div>
           <div class="panel about-content">
-            <p class="quote">Clean composition, strong contrast, and a little motion go a long way.</p>
+            <p class="quote">Strong contrast, simple hierarchy, and a polished layout make everything feel better.</p>
             <p>
               I’m a hardworking and motivated computing graduate from London Metropolitan University, currently working as a Flutter Developer at EkRaSunya.
             </p>
             <p>
-              My background includes mobile app development, database work, and full-stack problem solving. I enjoy turning complex ideas into interfaces that feel simple, modern, and trustworthy.
+              My background includes mobile app development, database work, and problem solving. I enjoy building software that looks modern and works smoothly in real-world use.
             </p>
             <div class="stats">
               <div class="stat"><strong>15+</strong><span>Projects completed</span></div>
@@ -721,10 +709,10 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">Featured Projects</p>
-            <h2>A tighter, more premium presentation of the best work.</h2>
+            <h2>Six projects, shown with more space and stronger hierarchy.</h2>
           </div>
           <p>
-            Each project gets room to breathe with stronger spacing, cleaner cards, and more intentional contrast so the layout feels designer-made instead of template-like.
+            This section keeps your actual content, but presents it in a cleaner card system with stronger contrast, better spacing, and a more professional feel.
           </p>
         </div>
 
@@ -734,7 +722,7 @@
             <div class="project-body">
               <div class="project-meta">Flutter · Booking</div>
               <h3>Futsal Booking Mobile App</h3>
-              <p>Mobile-first booking flow with authentication, real-time reservations, and a clean product experience.</p>
+              <p>Mobile-first booking flow with authentication, real-time reservations, and a clean user experience.</p>
               <div class="underline"></div>
             </div>
           </article>
@@ -792,98 +780,14 @@
       </div>
     </section>
 
-    <section id="travel" class="section">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="kicker">Travel & Tourism Marketing</p>
-            <h2>Make the brochure feel like a premium destination piece.</h2>
-          </div>
-          <p>Alternating layouts, spacious framing, and strong imagery help these marketing pieces feel high-end and easy to browse.</p>
-        </div>
-
-        <div class="split-layout reveal">
-          <div class="mockup panel"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&auto=format&fit=crop" alt="Travel brochure mockup one" loading="lazy" /></div>
-          <div class="copy">
-            <h3>Editorial travel storytelling with a luxury edge.</h3>
-            <p>Designed to feel more like a curated magazine spread than a standard promo layout.</p>
-          </div>
-        </div>
-
-        <div class="split-layout alt reveal">
-          <div class="copy">
-            <h3>Simple structure. Strong photos. Clean copy.</h3>
-            <p>When the layout is quiet, the destination content feels more aspirational and easier to digest.</p>
-          </div>
-          <div class="mockup panel"><img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=1920&auto=format&fit=crop" alt="Travel brochure mockup two" loading="lazy" /></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="editorial" class="section">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="kicker">Editorial & Publishing</p>
-            <h2>Book covers and print layouts with real visual weight.</h2>
-          </div>
-          <p>These mockups keep the image proportions intact while giving the page a cleaner, more sophisticated editorial rhythm.</p>
-        </div>
-
-        <div class="split-layout reveal">
-          <div class="copy">
-            <h3>Typography-led design that feels calm and deliberate.</h3>
-            <p>Spacing, hierarchy, and restraint do most of the work here — exactly what makes premium editorial design feel premium.</p>
-          </div>
-          <div class="mockup panel"><img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1920&auto=format&fit=crop" alt="Editorial book cover mockup one" loading="lazy" /></div>
-        </div>
-
-        <div class="split-layout alt reveal">
-          <div class="mockup panel"><img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1920&auto=format&fit=crop" alt="Editorial book cover mockup two" loading="lazy" /></div>
-          <div class="copy">
-            <h3>Presentation that respects the cover art.</h3>
-            <p>No stretching, no clutter, no unnecessary effects — just a polished showcase frame.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="digital" class="section">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="kicker">Digital Experiences</p>
-            <h2>Website case studies presented like launch moments.</h2>
-          </div>
-          <p>Instead of plain links, these cards feel like product highlights with a stronger sense of hierarchy and interactivity.</p>
-        </div>
-
-        <div class="digital-grid">
-          <article class="contact-card digital-card panel reveal">
-            <div class="device"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1920&auto=format&fit=crop" alt="Barcelona website preview" loading="lazy" /></div>
-            <h3>Barcelona Tourism Platform</h3>
-            <p>A destination experience concept built for clarity, inspiration, and strong visual storytelling.</p>
-            <a class="visit" href="https://example.com" target="_blank" rel="noopener noreferrer">Visit Website ↗</a>
-          </article>
-
-          <article class="contact-card digital-card panel reveal">
-            <div class="device"><img src="https://images.unsplash.com/photo-1522543558187-768b6df7c25c?q=80&w=1920&auto=format&fit=crop" alt="Madrid website preview" loading="lazy" /></div>
-            <h3>Madrid Experience Hub</h3>
-            <p>A modern editorial web concept with cleaner content flow and a stronger premium feel.</p>
-            <a class="visit" href="https://example.com" target="_blank" rel="noopener noreferrer">Visit Website ↗</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section id="skills" class="section">
       <div class="container">
         <div class="section-head reveal">
           <div>
             <p class="kicker">Skills</p>
-            <h2>Capability across product, interface, and visual craft.</h2>
+            <h2>Simple, readable, and easier to scan.</h2>
           </div>
-          <p>Presented as elegant chips so the section stays refined, balanced, and easy to scan.</p>
+          <p>Kept focused on the strengths already on your page so the design looks better without changing your content direction.</p>
         </div>
 
         <div class="skills-grid">
@@ -904,9 +808,9 @@
         <div class="contact-grid reveal">
           <div class="contact-card panel">
             <p class="kicker">Contact</p>
-            <h2>Let’s build something that feels sharp and modern.</h2>
+            <h2>Let’s build something sharp and modern.</h2>
             <p>
-              I’m open to freelance work, collaborations, and full-time opportunities where strong UI, reliable UX, and high-quality delivery matter.
+              I’m open to freelance work, collaborations, and full-time opportunities where strong UI, reliable UX, and clean delivery matter.
             </p>
             <div class="contact-links">
               <a class="social-pill" href="mailto:wangchuk017@gmail.com">

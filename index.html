@@ -9,13 +9,17 @@
   <meta name="author" content="Tshering Wangchu Sherpa" />
   <meta name="keywords" content="Flutter Developer, Computing Graduate, Portfolio, Mobile App Development, Database, Nepal" />
   <meta property="og:title" content="Tshering Wangchu Sherpa — Developer Portfolio" />
-  <meta property="og:description" content="A modern, high-contrast portfolio for a Flutter Developer and Computing Graduate." />
+  <meta property="og:description" content="Portfolio of Tshering Wangchu Sherpa — Flutter Developer and Computing Graduate specializing in mobile apps and database-driven systems." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="./profile.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Tshering Wangchu Sherpa — Developer Portfolio" />
-  <meta name="twitter:description" content="A modern, high-contrast portfolio for a Flutter Developer and Computing Graduate." />
+  <meta name="twitter:description" content="Portfolio of Tshering Wangchu Sherpa — Flutter Developer and Computing Graduate specializing in mobile apps and database-driven systems." />
   <meta name="twitter:image" content="./profile.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2362a8ff'/><stop offset='1' stop-color='%237c5cff'/></linearGradient></defs><circle cx='32' cy='32' r='30' fill='url(%23g)'/><text x='32' y='43' font-family='sans-serif' font-size='32' font-weight='700' text-anchor='middle' fill='white'>T</text></svg>" />
   <style>
     :root {
       --bg: #07111f;
@@ -286,6 +290,31 @@
       animation: float 8s var(--ease) infinite alternate-reverse;
     }
     .hero-mini img { width: 100%; height: 100%; object-fit: cover; }
+    .mini-code {
+      width: 100%;
+      height: 100%;
+      padding: 16px 14px;
+      background: linear-gradient(180deg, rgba(9,16,28,.96), rgba(9,16,28,.88));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mini-code-dots { display: flex; gap: 6px; }
+    .mini-code-dots span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.22);
+      display: inline-block;
+    }
+    .mini-code-body {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .68rem;
+      line-height: 1.7;
+      color: var(--muted-2);
+      white-space: pre-wrap;
+    }
+    .mini-code-body .ok { color: var(--good); }
     .floating-badge {
       position: absolute;
       left: -18px;
@@ -429,6 +458,35 @@
       transition: transform .72s var(--ease);
     }
     .project-card:hover .underline::after { transform: translateX(460%); }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tech-tag {
+      font-size: .72rem;
+      letter-spacing: .03em;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(98,168,255,.1);
+      border: 1px solid rgba(98,168,255,.22);
+      color: var(--accent);
+    }
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-size: .88rem;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      padding-bottom: 2px;
+      width: fit-content;
+      transition: color .25s ease, border-color .25s ease, transform .25s ease;
+    }
+    .project-link:hover { color: var(--text); border-color: var(--accent); transform: translateX(2px); }
 
     .split-layout {
       display: grid;
@@ -619,6 +677,34 @@
       .footer-box { flex-direction: column; align-items: flex-start; }
     }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Tshering Wangchu Sherpa",
+    "jobTitle": "Flutter Developer",
+    "description": "Flutter Developer and Computing Graduate specializing in mobile app development and database management.",
+    "email": "mailto:wangchuk017@gmail.com",
+    "telephone": "+977-980-879-6066",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Kathmandu",
+      "addressCountry": "NP"
+    },
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "London Metropolitan University"
+    },
+    "worksFor": {
+      "@type": "Organization",
+      "name": "EkRaSunya"
+    },
+    "sameAs": [
+      "https://github.com/Paldorje",
+      "https://www.linkedin.com/in/tshering-wangchu-sherpa-3314371b5/"
+    ]
+  }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -637,6 +723,7 @@
           <a href="#projects">Projects</a>
           <a href="#skills">Skills</a>
           <a href="#contact">Contact</a>
+          <a href="./resume.pdf" download="Tshering_Wangchu_Sherpa_Resume.pdf">Resume</a>
         </div>
       </nav>
     </div>
@@ -647,12 +734,13 @@
       <div class="hero-grid">
         <div class="reveal">
           <p class="eyebrow">Flutter Developer · Computing Graduate</p>
-          <h1>Modern interfaces, built with precision and calm confidence.</h1>
+          <h1>Flutter apps and databases, built with precision and quiet confidence.</h1>
           <p>
-            I build clean mobile applications and practical software systems with a strong focus on usability, performance, and visual clarity.
+            Computing graduate and Flutter Developer at EkRaSunya, focused on building intuitive mobile apps and well-structured databases — with an eye for detail and a drive to keep learning new technologies.
           </p>
           <div class="hero-actions">
             <a class="btn primary" href="#projects">View Projects</a>
+            <a class="btn" href="./resume.pdf" download="Tshering_Wangchu_Sherpa_Resume.pdf">Download Resume</a>
             <a class="btn" href="#contact">Get In Touch</a>
           </div>
         </div>
@@ -661,10 +749,15 @@
           <div class="hero-frame">
             <img src="./profile.png" alt="Tshering Wangchu Sherpa portrait" loading="eager" />
           </div>
-          <div class="hero-mini">
-            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1400&auto=format&fit=crop" alt="Designer working at a laptop" loading="lazy" />
+          <div class="hero-mini" aria-hidden="true">
+            <div class="mini-code">
+              <div class="mini-code-dots"><span></span><span></span><span></span></div>
+              <pre class="mini-code-body">flutter build
+<span class="ok">✓ 0 errors</span>
+<span class="ok">✓ ready to ship</span></pre>
+            </div>
           </div>
-          <div class="floating-badge">Flutter · SQL · UI/UX · Systems</div>
+          <div class="floating-badge">Flutter · Dart · SQL · Databases</div>
         </div>
       </div>
       <div class="scroll-hint">Scroll</div>
@@ -675,10 +768,10 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">About</p>
-            <h2>A clean, high-contrast portfolio that feels more premium.</h2>
+            <h2>Hardworking, curious, and always learning something new.</h2>
           </div>
           <p>
-            I like work that feels organized, readable, and confident. My focus is on turning technical skills into clear, modern digital experiences.
+            From Flutter apps to SQL-backed systems, I care about clean structure, efficient logic, and interfaces that just make sense.
           </p>
         </div>
 
@@ -687,12 +780,12 @@
             <img src="./profile.png" alt="Portrait of Tshering Wangchu Sherpa" loading="lazy" />
           </div>
           <div class="panel about-content">
-            <p class="quote">Strong contrast, simple hierarchy, and a polished layout make everything feel better.</p>
+            <p class="quote">I like problems that are hard enough to be worth solving properly.</p>
             <p>
               I’m a hardworking and motivated computing graduate from London Metropolitan University, currently working as a Flutter Developer at EkRaSunya.
             </p>
             <p>
-              My background includes mobile app development, database work, and problem solving. I enjoy building software that looks modern and works smoothly in real-world use.
+              My background covers Flutter development, SQL and database management, and full-stack problem solving. I’m keen, reliable, and a strong timekeeper — and I enjoy learning new technologies and taking on challenges that help me grow.
             </p>
             <div class="stats">
               <div class="stat"><strong>15+</strong><span>Projects completed</span></div>
@@ -709,10 +802,10 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">Featured Projects</p>
-            <h2>Six projects, shown with more space and stronger hierarchy.</h2>
+            <h2>Mobile apps and database systems, built end to end.</h2>
           </div>
           <p>
-            This section keeps your actual content, but presents it in a cleaner card system with stronger contrast, better spacing, and a more professional feel.
+            Academic and personal projects spanning Flutter development, database design, and full-stack systems — each one built to solve a specific, real problem.
           </p>
         </div>
 
@@ -723,6 +816,13 @@
               <div class="project-meta">Flutter · Booking</div>
               <h3>Futsal Booking Mobile App</h3>
               <p>Mobile-first booking flow with authentication, real-time reservations, and a clean user experience.</p>
+              <div class="tech-tags">
+                <span class="tech-tag">Flutter</span>
+                <span class="tech-tag">Dart</span>
+                <span class="tech-tag">.NET</span>
+                <span class="tech-tag">MySQL</span>
+              </div>
+              <a class="project-link" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">View Code ↗</a>
               <div class="underline"></div>
             </div>
           </article>
@@ -733,6 +833,13 @@
               <div class="project-meta">Java · HR System</div>
               <h3>Hiring System</h3>
               <p>A desktop management system for staff appointment, termination, and CRUD-based employee data handling.</p>
+              <div class="tech-tags">
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">MySQL</span>
+                <span class="tech-tag">GUI</span>
+                <span class="tech-tag">JDBC</span>
+              </div>
+              <a class="project-link" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">View Code ↗</a>
               <div class="underline"></div>
             </div>
           </article>
@@ -743,6 +850,13 @@
               <div class="project-meta">Flutter · API</div>
               <h3>Weather App</h3>
               <p>A beautiful weather interface powered by live data, with smooth interactions and responsive layouts.</p>
+              <div class="tech-tags">
+                <span class="tech-tag">Flutter</span>
+                <span class="tech-tag">Dart</span>
+                <span class="tech-tag">Weather API</span>
+                <span class="tech-tag">HTTP</span>
+              </div>
+              <a class="project-link" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">View Code ↗</a>
               <div class="underline"></div>
             </div>
           </article>
@@ -753,6 +867,13 @@
               <div class="project-meta">Database · Web</div>
               <h3>College Database System</h3>
               <p>A structured database-driven system designed for reliable record management and efficient administration.</p>
+              <div class="tech-tags">
+                <span class="tech-tag">MySQL</span>
+                <span class="tech-tag">PHP</span>
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">Database Design</span>
+              </div>
+              <a class="project-link" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">View Code ↗</a>
               <div class="underline"></div>
             </div>
           </article>
@@ -763,6 +884,13 @@
               <div class="project-meta">Java · Inventory</div>
               <h3>Inventory Management System</h3>
               <p>CRUD-focused inventory tooling for tracking stock, products, and business operations more efficiently.</p>
+              <div class="tech-tags">
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">MySQL</span>
+                <span class="tech-tag">Swing</span>
+                <span class="tech-tag">JDBC</span>
+              </div>
+              <a class="project-link" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">View Code ↗</a>
               <div class="underline"></div>
             </div>
           </article>
@@ -773,6 +901,13 @@
               <div class="project-meta">XML · UI</div>
               <h3>Music Store System</h3>
               <p>A structured data and UI concept for managing catalog information with a clean presentation style.</p>
+              <div class="tech-tags">
+                <span class="tech-tag">XML</span>
+                <span class="tech-tag">CSS</span>
+                <span class="tech-tag">HTML</span>
+                <span class="tech-tag">Data Modeling</span>
+              </div>
+              <a class="project-link" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">View Code ↗</a>
               <div class="underline"></div>
             </div>
           </article>
@@ -785,20 +920,24 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">Skills</p>
-            <h2>Simple, readable, and easier to scan.</h2>
+            <h2>Languages, frameworks, and tools I build with.</h2>
           </div>
-          <p>Kept focused on the strengths already on your page so the design looks better without changing your content direction.</p>
+          <p>A snapshot of what I use day to day for mobile development, databases, and full-stack projects.</p>
         </div>
 
         <div class="skills-grid">
           <div class="skill-chip reveal"><span>Flutter</span></div>
           <div class="skill-chip reveal"><span>Dart</span></div>
-          <div class="skill-chip reveal"><span>UI/UX</span></div>
-          <div class="skill-chip reveal"><span>Database Design</span></div>
           <div class="skill-chip reveal"><span>Java</span></div>
           <div class="skill-chip reveal"><span>SQL</span></div>
-          <div class="skill-chip reveal"><span>Problem Solving</span></div>
-          <div class="skill-chip reveal"><span>Responsive Web</span></div>
+          <div class="skill-chip reveal"><span>MySQL</span></div>
+          <div class="skill-chip reveal"><span>HTML</span></div>
+          <div class="skill-chip reveal"><span>CSS</span></div>
+          <div class="skill-chip reveal"><span>JavaScript</span></div>
+          <div class="skill-chip reveal"><span>Python</span></div>
+          <div class="skill-chip reveal"><span>.NET</span></div>
+          <div class="skill-chip reveal"><span>Git</span></div>
+          <div class="skill-chip reveal"><span>GetX</span></div>
         </div>
       </div>
     </section>
@@ -816,15 +955,18 @@
               <a class="social-pill" href="mailto:wangchuk017@gmail.com">
                 <span>Email</span><span>wangchuk017@gmail.com</span>
               </a>
+              <a class="social-pill" href="tel:+9779808796066">
+                <span>Phone</span><span>+977 980 879 6066</span>
+              </a>
               <a class="social-pill" href="https://www.linkedin.com/in/tshering-wangchu-sherpa-3314371b5/" target="_blank" rel="noopener noreferrer">
                 <span>LinkedIn</span><span>Connect ↗</span>
               </a>
-              <!-- <a class="social-pill" href="https://www.behance.net" target="_blank" rel="noopener noreferrer">
-                <span>Behance</span><span>View ↗</span>
-              </a> -->
-              <!-- <a class="social-pill" href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-                <span>Instagram</span><span>Follow ↗</span>
-              </a> -->
+              <a class="social-pill" href="https://github.com/Paldorje" target="_blank" rel="noopener noreferrer">
+                <span>GitHub</span><span>Follow ↗</span>
+              </a>
+              <a class="social-pill" href="https://www.google.com/maps/search/?api=1&query=Kathmandu%2C+Nepal" target="_blank" rel="noopener noreferrer">
+                <span>Location</span><span>Kathmandu, Nepal</span>
+              </a>
             </div>
           </div>
 
@@ -842,10 +984,11 @@
 
   <footer class="footer">
     <div class="footer-box panel">
-      <p>© 2026 Tshering Wangchu Sherpa. All rights reserved.</p>
+      <p>© <span id="year">2026</span> Tshering Wangchu Sherpa. All rights reserved.</p>
       <div class="footer-links">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
       <button class="to-top" type="button" id="toTop">Back to Top ↑</button>
@@ -857,6 +1000,8 @@
     const navLinks = document.getElementById('primary-nav');
     const toTop = document.getElementById('toTop');
     const progress = document.getElementById('progress');
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     navToggle.addEventListener('click', () => {
       const isOpen = navLinks.classList.toggle('open');
